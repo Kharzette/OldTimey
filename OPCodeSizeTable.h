@@ -36,7 +36,7 @@ uint8_t	OPCArgSizeTable[256]	=
 	2,		//ORA a
 	2,		//ASL a
 	1,		//BBR0 r (W65C02S instruction)
-	1,		//BPL a
+	1,		//BPL r
 	1,		//ORA (zp),y
 	1,		//ORA (zp)
 	0,		//nothing
