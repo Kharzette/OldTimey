@@ -14,5 +14,7 @@ typedef struct
 
 uint8_t	FetchValueZP(const MemModule *pMem, uint8_t addr);
 uint8_t	FetchValue(const MemModule *pMem, uint16_t addr);
+void	WriteZP(MemModule *pMem, uint8_t addr, uint8_t value);
+void	WriteAbsolute(MemModule *pMem, uint16_t addr, uint8_t value);
 
 #endif	//__MEMORY_H__

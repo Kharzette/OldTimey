@@ -27,6 +27,9 @@ uint16_t	AbsoluteIndirect(const MemModule *pMem, uint16_t argAddr);
 //zp
 uint8_t	ZP(const MemModule *pMem, uint8_t argAddr);
 
+//zp
+uint8_t	ZP16(const MemModule *pMem, uint8_t argAddr);
+
 //(zp,x)
 uint8_t	ZPIndirectX8(const Registers *pRegs, const MemModule *pMem, uint8_t argAddr);
 
@@ -35,6 +38,9 @@ uint16_t	ZPIndirectX16(const Registers *pRegs, const MemModule *pMem, uint8_t ar
 
 //zp,x
 uint8_t	ZPX(const Registers *pRegs, const MemModule *pMem, uint8_t argAddr);
+
+//zp,x
+uint16_t	ZPX16(const Registers *pRegs, const MemModule *pMem, uint8_t argAddr);
 
 //zp,y
 uint8_t	ZPY(const Registers *pRegs, const MemModule *pMem, uint8_t argAddr);

@@ -67,3 +67,42 @@ uint16_t	FetchValue16(const MemModule *pMem, uint16_t addr)
 	return	(*((uint16_t *)(pMem->mpChunk + addr)));
 }
 
+void	WriteZP(MemModule *pMem, uint8_t addr, uint8_t value)
+{
+	assert(pMem->mAddrOfs == 0);
+	assert(pMem->mSize < 0xFF);
+	assert(pMem->mbWritable);
+
+	if(pMem->mAddrOfs != 0)
+	{
+		return;
+	}
+	if(pMem->mSize < 0xFF)
+	{
+		return;
+	}
+	if(!pMem->mbWritable)
+	{
+		return;
+	}
+
+	pMem->mpChunk[addr]	=value;
+}
+
+void	WriteAbsolute(MemModule *pMem, uint16_t addr, uint8_t value)
+{
+	assert(pMem->mbWritable);
+
+	if(!pMem->mbWritable)
+	{
+		return;
+	}
+
+	int	chipAddr	=addr - pMem->mAddrOfs;
+	if(chipAddr < 0 || chipAddr > pMem->mSize)
+	{
+		return;
+	}
+
+	pMem->mpChunk[chipAddr]	=value;
+}

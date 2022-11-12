@@ -25,4 +25,6 @@ typedef struct
 #define	PFLG_OVERFLOW		(0x1 << 6)
 #define	PFLG_NEGATIVE		(0x1 << 7)
 
+void	FlagResultNZ(Registers *pRegs, const uint8_t result);
+
 #endif	//__REGISTERS_H__

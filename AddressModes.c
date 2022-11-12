@@ -62,6 +62,12 @@ uint8_t	ZP(const MemModule *pMem, uint8_t argAddr)
 	return	FetchValueZP(pMem, argAddr);
 }
 
+//zp
+uint16_t	ZP16(const MemModule *pMem, uint8_t argAddr)
+{
+	return	FetchValueZP16(pMem, argAddr);
+}
+
 //(zp,x)
 uint8_t	ZPIndirectX8(const Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
 {
@@ -82,6 +88,11 @@ uint16_t	ZPIndirectX16(const Registers *pRegs, const MemModule *pMem, uint8_t ar
 uint8_t	ZPX(const Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
 {
 	return	FetchValueZP(pMem, argAddr + pRegs->X);
+}
+
+uint16_t	ZPX16(const Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
+{
+	return	FetchValueZP16(pMem, argAddr + pRegs->X);
 }
 
 //zp,y
