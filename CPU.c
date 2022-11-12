@@ -27,6 +27,9 @@ int	CPUThreadProc(void *context)
 {
 	CPU	cpu;
 
+	//context is just an active bool for now
+	bool	*bActive	=(bool *)context;
+
 	//set up memory
 	//hard code for now
 
@@ -60,7 +63,7 @@ int	CPUThreadProc(void *context)
 	tiny.tv_sec		=0;
 
 	ticUps	=ticTotal	=0;
-	while(cpu.mbOn)
+	while(cpu.mbOn && *bActive)
 	{
 		clock_gettime(CLOCK_REALTIME, &start);
 
@@ -198,6 +201,6 @@ bool	CPUTick(CPU *cpu)
 	{
 		assert(false);
 	}
-	
+
 	OPCJumpTable[instruction](&cpu->mRegs, &cpu->mMem, wordArg);
 }
