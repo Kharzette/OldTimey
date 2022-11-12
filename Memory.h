@@ -12,8 +12,11 @@ typedef struct
 	uint16_t	mSize;		//size 
 }	MemModule;
 
-uint8_t	FetchValueZP(const MemModule *pMem, uint8_t addr);
-uint8_t	FetchValue(const MemModule *pMem, uint16_t addr);
+uint8_t		FetchValueZP(const MemModule *pMem, uint8_t addr);
+uint16_t	FetchValueZP16(const MemModule *pMem, uint8_t addr);
+uint8_t		FetchValue(const MemModule *pMem, uint16_t addr);
+uint16_t	FetchValue16(const MemModule *pMem, uint16_t addr);
+
 void	WriteZP(MemModule *pMem, uint8_t addr, uint8_t value);
 void	WriteAbsolute(MemModule *pMem, uint16_t addr, uint8_t value);
 

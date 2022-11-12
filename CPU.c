@@ -1,6 +1,8 @@
 #include	<stdint.h>
 #include	<stdbool.h>
 #include	<stdlib.h>
+#include	<assert.h>
+#include	<stdio.h>
 #include	<time.h>
 #include	<threads.h>
 #include	<stdatomic.h>
@@ -21,6 +23,108 @@ typedef struct
 
 	int			mNumModules;
 }	CPU;
+
+
+bool	CPUTick(CPU *cpu)
+{
+	bool	bFound	=false;
+
+	//find the right memory chunk
+	uint8_t	*pChunk		=NULL;
+	int		modIndex	=-1;
+
+	//see if rom has the address
+	for(int i=0;i < cpu->mNumModules;i++)
+	{
+		if(cpu->mMem[i].mbWritable)
+		{
+			continue;	//skip RAM for now
+		}
+
+		uint16_t	pc	=cpu->mRegs.PC;
+		uint16_t	ofs	=cpu->mMem[i].mAddrOfs;
+
+		if(cpu->mRegs.PC >= ofs
+			&& cpu->mRegs.PC < (ofs + cpu->mMem[i].mSize))
+		{
+			pChunk		=&cpu->mMem[i].mpChunk[pc - ofs];
+			modIndex	=i;
+			bFound		=true;
+			break;
+		}
+	}
+
+	if(!bFound)
+	{
+		//see if ram has the address
+		for(int i=0;i < cpu->mNumModules;i++)
+		{
+			if(!cpu->mMem[i].mbWritable)
+			{
+				continue;	//skip ROM
+			}
+
+			uint16_t	pc	=cpu->mRegs.PC;
+			uint16_t	ofs	=cpu->mMem[i].mAddrOfs;
+
+			if(cpu->mRegs.PC >= ofs
+				&& cpu->mRegs.PC < (ofs + cpu->mMem[i].mSize))
+			{
+				pChunk		=&cpu->mMem[i].mpChunk[pc - ofs];
+				modIndex	=i;
+				bFound		=true;
+				break;
+			}
+		}
+	}
+
+	if(!bFound)
+	{
+		printf("No memory at address %d\n", cpu->mRegs.PC);
+		return	false;
+	}
+
+	//fetch instruction
+	uint8_t	instruction	=*pChunk;
+
+	//advance program counter
+	cpu->mRegs.PC++;
+	pChunk++;
+
+	//see how many arguments are needed
+	uint8_t	argBytes	=OPCArgSizeTable[instruction];
+
+	uint8_t		byteArg;
+	uint16_t	wordArg;
+
+	if(argBytes == 1)
+	{
+		byteArg	=*pChunk;
+
+		//stuff in word for jump table
+		wordArg	=byteArg;
+
+		//advance program counter
+		cpu->mRegs.PC++;
+		pChunk++;
+	}
+	else if(argBytes == 2)
+	{
+		wordArg	=*((uint16_t *)pChunk);
+
+		//advance program counter
+		cpu->mRegs.PC++;
+		pChunk++;
+	}
+	else
+	{
+		assert(false);
+	}
+
+	//hard coding to RAM here but eventually need to figure out
+	//all the gobliny details of bank switching and such
+	OPCJumpTable[instruction](&cpu->mRegs, &cpu->mMem[0], wordArg);
+}
 
 
 int	CPUThreadProc(void *context)
@@ -47,7 +151,7 @@ int	CPUThreadProc(void *context)
 	cpu.mNumModules	=2;
 
 	//boot!
-	cpu.mRegs.S		=0x01FF;	//top of stack
+	cpu.mRegs.S		=0xFF;		//top of stack, but will be offset 256 I think
 	cpu.mRegs.PC	=0xFFFC;	//C64 first instruction spot
 
 	//clock speed
@@ -106,101 +210,4 @@ int	CPUThreadProc(void *context)
 	printf("Exiting thread with ratio: %f\n", ratio);
 
 	return	thrd_success;
-}
-
-
-bool	CPUTick(CPU *cpu)
-{
-	bool	bFound	=false;
-
-	//find the right memory chunk
-	uint8_t	*pChunk	=NULL;
-
-	//see if rom has the address
-	for(int i=0;i < cpu->mNumModules;i++)
-	{
-		if(cpu->mMem[i].mbWritable)
-		{
-			continue;	//skip RAM for now
-		}
-
-		uint16_t	pc	=cpu->mRegs.PC;
-		uint16_t	ofs	=cpu->mMem[i].mAddrOfs;
-
-		if(cpu->mRegs.PC >= ofs
-			&& cpu->mRegs.PC < (ofs + cpu->mMem[i].mSize))
-		{
-			pChunk	=&cpu->mMem[i].mpChunk[pc - ofs];
-			bFound	=true;
-			break;
-		}
-	}
-
-	if(!bFound)
-	{
-		//see if ram has the address
-		for(int i=0;i < cpu->mNumModules;i++)
-		{
-			if(!cpu->mMem[i].mbWritable)
-			{
-				continue;	//skip ROM
-			}
-
-			uint16_t	pc	=cpu->mRegs.PC;
-			uint16_t	ofs	=cpu->mMem[i].mAddrOfs;
-
-			if(cpu->mRegs.PC >= ofs
-				&& cpu->mRegs.PC < (ofs + cpu->mMem[i].mSize))
-			{
-				pChunk	=&cpu->mMem[i].mpChunk[pc - ofs];
-				bFound	=true;
-				break;
-			}
-		}
-	}
-
-	if(!bFound)
-	{
-		printf("No memory at address %d\n", cpu->mRegs.PC);
-		return	false;
-	}
-
-	//fetch instruction
-	uint8_t	instruction	=*pChunk;
-
-	//advance program counter
-	cpu->mRegs.PC++;
-	pChunk++;
-
-	//see how many arguments are needed
-	uint8_t	argBytes	=OPCArgSizeTable[instruction];
-
-	uint8_t		byteArg;
-	uint16_t	wordArg;
-
-	if(argBytes == 1)
-	{
-		byteArg	=*pChunk;
-
-		//stuff in word for jump table
-		wordArg	=byteArg;
-
-		//advance program counter
-		cpu->mRegs.PC++;
-		pChunk++;
-	}
-	else if(argBytes == 2)
-	{
-		wordArg	=*((uint16_t *)pChunk);
-
-		//advance program counter
-		cpu->mRegs.PC++;
-		pChunk++;
-	}
-	else
-	{
-		assert(false);
-	}
-
-	OPCJumpTable[instruction](&cpu->mRegs, &cpu->mMem, wordArg);
 }

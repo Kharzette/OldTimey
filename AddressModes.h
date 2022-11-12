@@ -3,8 +3,6 @@
 #include	<stdint.h>
 #include	<stdbool.h>
 
-typedef	struct	Registers;
-typedef	struct	MemModule;
 
 //a
 uint8_t	Absolute8(const MemModule *pMem, uint16_t argAddr);
@@ -16,10 +14,16 @@ uint16_t	Absolute16(const MemModule *pMem, uint16_t argAddr);
 uint16_t	AbsoluteIndirectX(const Registers *pRegs, const MemModule *pMem, uint16_t argAddr);
 
 //a,x
-void	AbsoluteX(const Registers *pRegs, const MemModule *pMem, uint16_t argAddr);
+uint8_t	AbsoluteX8(const Registers *pRegs, const MemModule *pMem, uint16_t argAddr);
+
+//a,x
+uint16_t	AbsoluteX16(const Registers *pRegs, const MemModule *pMem, uint16_t argAddr);
 
 //a,y
-void	AbsoluteY(const Registers *pRegs, const MemModule *pMem, uint16_t argAddr);
+uint8_t	AbsoluteY8(const Registers *pRegs, const MemModule *pMem, uint16_t argAddr);
+
+//a,y
+uint16_t	AbsoluteY16(const Registers *pRegs, const MemModule *pMem, uint16_t argAddr);
 
 //(a)
 uint16_t	AbsoluteIndirect(const MemModule *pMem, uint16_t argAddr);

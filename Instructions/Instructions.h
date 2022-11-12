@@ -3,9 +3,6 @@
 #include	<stdint.h>
 
 
-typedef	struct	Registers;
-typedef	struct	MemModule;
-
 void	Missing(Registers *pRegs, MemModule *pMem, uint16_t arg);
 
 void	ADC_ZPIndX(Registers *pRegs, MemModule *pMem, uint16_t argAddr);

@@ -1,10 +1,8 @@
 #ifndef __OPCODEJUMPTABLE_H__
 #define	__OPCODEJUMPTABLE_H__
 #include	<stdint.h>
-#include	"Instructions.h"
+#include	"Instructions/Instructions.h"
 
-typedef	struct	Registers;
-typedef	struct	MemModule;
 
 //need a catch all func pointer.
 //conjunction junction

@@ -4,6 +4,18 @@
 #include	"../Memory.h"
 #include	"../AddressModes.h"
 
+
+void	AND(Registers *pRegs, uint8_t arg0, uint8_t arg1, uint8_t *res)
+{
+	//and
+	uint8_t	result	=arg0 & arg1;
+
+	*res	=result;
+
+	FlagResultNZ(pRegs, result);
+}
+
+
 //doing these in the order they appear in the OpCode Matrix
 
 //(zp,x)
@@ -75,16 +87,3 @@ void	AND_AbsoluteX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 	
 	AND(pRegs, pRegs->A, arg, &pRegs->A);
 }
-
-
-void	AND(Registers *pRegs, uint8_t arg0, uint8_t arg1, uint8_t *res)
-{
-	//and
-	uint8_t	result	=arg0 & arg1;
-
-	*res	=result;
-
-	FlagResultNZ(pRegs, result);
-}
-
-
