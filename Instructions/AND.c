@@ -7,7 +7,7 @@
 //doing these in the order they appear in the OpCode Matrix
 
 //(zp,x)
-void	AND_ZPIndX(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
+void	AND_ZPIndX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPIndirectX8(pRegs, pMem, argAddr);
 
@@ -15,7 +15,7 @@ void	AND_ZPIndX(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
 }
 
 //zp
-void	AND_ZP(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
+void	AND_ZP(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZP(pMem, argAddr);
 
@@ -23,13 +23,13 @@ void	AND_ZP(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
 }
 
 //#
-void	AND_Immediate(Registers *pRegs, uint8_t arg)
+void	AND_Immediate(Registers *pRegs, MemModule *pMem, uint16_t arg)
 {
 	AND(pRegs, pRegs->A, arg, &pRegs->A);
 }
 
 //a
-void	AND_Absolute(Registers *pRegs, const MemModule *pMem, uint16_t argAddr)
+void	AND_Absolute(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=Absolute8(pMem, argAddr);
 
@@ -37,7 +37,7 @@ void	AND_Absolute(Registers *pRegs, const MemModule *pMem, uint16_t argAddr)
 }
 
 //(zp),y
-void	AND_ZPIndY(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
+void	AND_ZPIndY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPIndirectY8(pRegs, pMem, argAddr);
 
@@ -45,7 +45,7 @@ void	AND_ZPIndY(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
 }
 
 //(zp)
-void	AND_ZPIndirect(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
+void	AND_ZPIndirect(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPIndirect8(pMem, argAddr);
 
@@ -53,7 +53,7 @@ void	AND_ZPIndirect(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
 }
 
 //zp,x
-void	AND_ZPX(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
+void	AND_ZPX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPX(pRegs, pMem, argAddr);
 
@@ -61,7 +61,7 @@ void	AND_ZPX(Registers *pRegs, const MemModule *pMem, uint8_t argAddr)
 }
 
 //a,y
-void	AND_AbsoluteY(Registers *pRegs, const MemModule *pMem, uint16_t argAddr)
+void	AND_AbsoluteY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=AbsoluteY8(pRegs, pMem, argAddr);
 	
@@ -69,7 +69,7 @@ void	AND_AbsoluteY(Registers *pRegs, const MemModule *pMem, uint16_t argAddr)
 }
 
 //a,x
-void	AND_AbsoluteX(Registers *pRegs, const MemModule *pMem, uint16_t argAddr)
+void	AND_AbsoluteX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=AbsoluteX8(pRegs, pMem, argAddr);
 	

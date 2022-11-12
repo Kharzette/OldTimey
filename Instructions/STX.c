@@ -7,7 +7,7 @@
 //doing these in the order they appear in the OpCode Matrix
 
 //zp
-void	STX_ZP(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	STX_ZP(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	WriteZP(pMem, argAddr, pRegs->X);
 }
@@ -19,7 +19,7 @@ void	STX_Absolute(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //zp,y
-void	STX_ZPY(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	STX_ZPY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	WriteZP(pMem, argAddr + pRegs->Y, pRegs->X);
 }

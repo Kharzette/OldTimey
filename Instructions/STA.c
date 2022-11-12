@@ -7,7 +7,7 @@
 //doing these in the order they appear in the OpCode Matrix
 
 //(zp,x)
-void	STA_ZPIndirectX(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	STA_ZPIndirectX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint16_t	pointer	=ZPX16(pRegs, pMem, argAddr);
 
@@ -15,7 +15,7 @@ void	STA_ZPIndirectX(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
 }
 
 //zp
-void	STA_ZP(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	STA_ZP(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	WriteZP(pMem, argAddr, pRegs->A);
 }
@@ -27,7 +27,7 @@ void	STA_Absolute(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //(zp),y
-void	STA_ZPIndirectY(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	STA_ZPIndirectY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint16_t	pointer	=ZP16(pMem, argAddr);
 
@@ -37,7 +37,7 @@ void	STA_ZPIndirectY(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
 }
 
 //(zp)
-void	STA_ZPIndirect(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	STA_ZPIndirect(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint16_t	pointer	=ZP16(pMem, argAddr);
 
@@ -45,7 +45,7 @@ void	STA_ZPIndirect(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
 }
 
 //zp,x
-void	STA_ZPX(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	STA_ZPX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	WriteZP(pMem, argAddr + pRegs->X, pRegs->A);
 }

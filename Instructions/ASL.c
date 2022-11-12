@@ -7,7 +7,7 @@
 //doing these in the order they appear in the OpCode Matrix
 
 //zp
-void	ASL_ZP(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	ASL_ZP(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZP(pMem, argAddr);
 
@@ -17,7 +17,7 @@ void	ASL_ZP(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
 }
 
 //A
-void	ASL_Accumulator(Registers *pRegs)
+void	ASL_Accumulator(Registers *pRegs, MemModule *pUnUsed, uint16_t argUnUsed)
 {
 	ASL(pRegs, pRegs->A, &pRegs->A);
 }
@@ -33,7 +33,7 @@ void	ASL_Absolute(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //zp,x
-void	ASL_ZPX(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	ASL_ZPX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPX(pRegs, pMem, argAddr);
 

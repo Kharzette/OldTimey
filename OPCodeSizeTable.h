@@ -1,5 +1,5 @@
-#ifndef __OPCODETABLES_H__
-#define	__OPCODETABLES_H__
+#ifndef __OPCODESIZETABLE_H__
+#define	__OPCODESIZETABLE_H__
 #include	<stdint.h>
 
 
@@ -147,7 +147,7 @@ uint8_t	OPCArgSizeTable[256]	=
 	0, 0,	//nothing
 	1,		//STY zp
 	1,		//STA zp
-	1,		//STA zp
+	1,		//STX zp
 	1,		//SMB0 zp (W65C02S instruction)
 	0,		//DEY i
 	1,		//BIT #
@@ -266,4 +266,4 @@ uint8_t	OPCArgSizeTable[256]	=
 	1,		//BBS7 r (W65C02S instruction)
 };
 
-#endif	//__OPCODETABLES_H__
+#endif	//__OPCODESIZETABLE_H__

@@ -7,14 +7,14 @@
 //doing these in the order they appear in the OpCode Matrix
 
 //#
-void	LDX_Immediate(Registers *pRegs, uint8_t arg)
+void	LDX_Immediate(Registers *pRegs, MemModule *pUnUsed, uint8_t arg)
 {
 	pRegs->X	=arg;
 	FlagResultNZ(pRegs, arg);
 }
 
 //zp
-void	LDX_ZP(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	LDX_ZP(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	pRegs->X	=ZP(pMem, argAddr);
 	FlagResultNZ(pRegs, pRegs->X);
@@ -28,7 +28,7 @@ void	LDX_Absolute(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //zp,y
-void	LDX_ZPY(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	LDX_ZPY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	pRegs->X	=ZPY(pRegs, pMem, argAddr);
 	FlagResultNZ(pRegs, pRegs->X);

@@ -7,21 +7,21 @@
 //doing these in the order they appear in the OpCode Matrix
 
 //(zp,x)
-void	LDA_ZPIndirectX(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	LDA_ZPIndirectX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	pRegs->A	=ZPIndirectX8(pRegs, pMem, argAddr);
 	FlagResultNZ(pRegs, pRegs->A);
 }
 
 //zp
-void	LDA_ZP(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	LDA_ZP(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	pRegs->A	=ZP(pMem, argAddr);
 	FlagResultNZ(pRegs, pRegs->A);
 }
 
 //#
-void	LDA_Immediate(Registers *pRegs, uint8_t arg)
+void	LDA_Immediate(Registers *pRegs, MemModule *pUnUsed, uint16_t arg)
 {
 	pRegs->A	=arg;
 	FlagResultNZ(pRegs, arg);
@@ -35,21 +35,21 @@ void	LDA_Absolute(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //(zp),y
-void	LDA_ZPIndirectY(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	LDA_ZPIndirectY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	pRegs->A	=ZPIndirectY8(pRegs, pMem, argAddr);
 	FlagResultNZ(pRegs, pRegs->A);
 }
 
 //(zp)
-void	LDA_ZPIndirect(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	LDA_ZPIndirect(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	pRegs->A	=ZPIndirect8(pMem, argAddr);
 	FlagResultNZ(pRegs, pRegs->A);
 }
 
 //zp,x
-void	LDA_ZPX(Registers *pRegs, MemModule *pMem, uint8_t argAddr)
+void	LDA_ZPX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	pRegs->A	=ZPX(pRegs, pMem, argAddr);
 	FlagResultNZ(pRegs, pRegs->A);

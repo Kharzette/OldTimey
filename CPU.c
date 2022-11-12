@@ -7,6 +7,7 @@
 #include	"Registers.h"
 #include	"Memory.h"
 #include	"OPCodeSizeTable.h"
+#include	"OPCodeJumpTable.h"
 
 
 #define	MAX_MEMORY_MODULES	8
@@ -178,6 +179,9 @@ bool	CPUTick(CPU *cpu)
 	{
 		byteArg	=*pChunk;
 
+		//stuff in word for jump table
+		wordArg	=byteArg;
+
 		//advance program counter
 		cpu->mRegs.PC++;
 		pChunk++;
@@ -190,11 +194,10 @@ bool	CPUTick(CPU *cpu)
 		cpu->mRegs.PC++;
 		pChunk++;
 	}
-
-	Execute(cpu, instruction, argBytes, byteArg, wordArg);
-}
-
-
-void	Execute(CPU *cpu, uint8_t instruction, uint8_t argSize, uint8_t byteArg, uint16_t wordArg)
-{
+	else
+	{
+		assert(false);
+	}
+	
+	OPCJumpTable[instruction](&cpu->mRegs, &cpu->mMem, wordArg);
 }
