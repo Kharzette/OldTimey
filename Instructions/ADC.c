@@ -1,8 +1,8 @@
 #include	<stdint.h>
 #include	<stdbool.h>
-#include	"Registers.h"
-#include	"Memory.h"
-#include	"AddressModes.h"
+#include	"../Registers.h"
+#include	"../Memory.h"
+#include	"../AddressModes.h"
 
 //doing these in the order they appear in the OpCode Matrix
 
@@ -109,27 +109,5 @@ void	ADC(Registers *pRegs, uint8_t arg0, uint8_t arg1, uint8_t *res)
 		pRegs->P	&=(!PFLG_CARRY);
 	}
 
-	FlagResult(pRegs, *res);
-}
-
-
-void	FlagResult(Registers *pRegs, const uint8_t result)
-{
-	if(result == 0)
-	{
-		pRegs->P	|=PFLG_ZERO;
-	}
-	else
-	{
-		pRegs->P	&=(!PFLG_ZERO);
-	}
-
-	if(result >> 7)
-	{
-		pRegs->P	|=PFLG_NEGATIVE;
-	}
-	else
-	{
-		pRegs->P	&=(!PFLG_NEGATIVE);
-	}
+	FlagResultNZ(pRegs, *res);
 }
