@@ -61,26 +61,3 @@ void	STA_AbsoluteX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 {
 	WriteAbsolute(pMem, argAddr + pRegs->X, pRegs->A);
 }
-
-
-//shift left one bit
-void	ASL(Registers *pRegs, uint8_t arg0, uint8_t *res)
-{
-	//add
-	uint16_t	result	=arg0;
-
-	result	<<=1;
-
-	*res	=result & 0xFF;
-
-	if(result & 0x0100)	//bit 8 set?
-	{
-		pRegs->P	|=PFLG_CARRY;
-	}
-	else
-	{
-		pRegs->P	&=(!PFLG_CARRY);
-	}
-
-	FlagResultNZ(pRegs, *res);
-}
