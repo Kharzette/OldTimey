@@ -71,7 +71,7 @@ void	WriteZP(MemModule *pMem, uint8_t addr, uint8_t value)
 {
 	assert(pMem->mAddrOfs == 0);
 	assert(pMem->mSize < 0xFF);
-	assert(pMem->mbWritable);
+	assert(pMem->mFlags & MM_WRITABLE);
 
 	if(pMem->mAddrOfs != 0)
 	{
@@ -81,7 +81,7 @@ void	WriteZP(MemModule *pMem, uint8_t addr, uint8_t value)
 	{
 		return;
 	}
-	if(!pMem->mbWritable)
+	if(!(pMem->mFlags & MM_WRITABLE))
 	{
 		return;
 	}
@@ -91,9 +91,9 @@ void	WriteZP(MemModule *pMem, uint8_t addr, uint8_t value)
 
 void	WriteAbsolute(MemModule *pMem, uint16_t addr, uint8_t value)
 {
-	assert(pMem->mbWritable);
+	assert(pMem->mFlags & MM_WRITABLE);
 
-	if(!pMem->mbWritable)
+	if(!(pMem->mFlags & MM_WRITABLE))
 	{
 		return;
 	}

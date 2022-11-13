@@ -12,7 +12,7 @@ typedef struct
 
 	uint8_t		P;	//status register (flags)
 
-	uint8_t		S;	//stack pointer
+	uint16_t	S;	//16 bit stack pointer (not classic!)
 }	Registers;
 
 //flags register bits

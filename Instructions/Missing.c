@@ -2,10 +2,10 @@
 #include	<stdbool.h>
 #include	<assert.h>
 #include	"../Registers.h"
-#include	"../Memory.h"
+#include	"../MemController.h"
 
 
-void	Missing(Registers *pRegs, MemModule *pMem, uint16_t arg)
+void	Missing(Registers *pRegs, MemController *pMem, uint16_t arg)
 {
 	assert(false);
 }

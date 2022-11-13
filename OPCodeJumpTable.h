@@ -6,7 +6,7 @@
 
 //need a catch all func pointer.
 //conjunction junction
-typedef	void(*InstructionFunction)(Registers *, MemModule *, uint16_t arg);
+typedef	void(*InstructionFunction)(Registers *, MemController *, uint16_t arg);
 
 InstructionFunction	OPCJumpTable[256]	=
 {

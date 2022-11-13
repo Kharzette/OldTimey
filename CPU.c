@@ -7,6 +7,7 @@
 #include	<threads.h>
 #include	<stdatomic.h>
 #include	"Registers.h"
+#include	"MemController.h"
 #include	"Memory.h"
 #include	"OPCodeSizeTable.h"
 #include	"OPCodeJumpTable.h"
@@ -18,79 +19,22 @@ typedef struct
 {
 	atomic_bool	mbOn;	//powered?
 
-	Registers	mRegs;
-	MemModule	mMem[MAX_MEMORY_MODULES];
+	Registers		mRegs;
+	MemController	*mpMC;
 
-	int			mNumModules;
 }	CPU;
 
 
 bool	CPUTick(CPU *cpu)
 {
-	bool	bFound	=false;
-
-	//find the right memory chunk
-	uint8_t	*pChunk		=NULL;
-	int		modIndex	=-1;
-
-	//see if rom has the address
-	for(int i=0;i < cpu->mNumModules;i++)
-	{
-		if(cpu->mMem[i].mbWritable)
-		{
-			continue;	//skip RAM for now
-		}
-
-		uint16_t	pc	=cpu->mRegs.PC;
-		uint16_t	ofs	=cpu->mMem[i].mAddrOfs;
-
-		if(cpu->mRegs.PC >= ofs
-			&& cpu->mRegs.PC < (ofs + cpu->mMem[i].mSize))
-		{
-			pChunk		=&cpu->mMem[i].mpChunk[pc - ofs];
-			modIndex	=i;
-			bFound		=true;
-			break;
-		}
-	}
-
-	if(!bFound)
-	{
-		//see if ram has the address
-		for(int i=0;i < cpu->mNumModules;i++)
-		{
-			if(!cpu->mMem[i].mbWritable)
-			{
-				continue;	//skip ROM
-			}
-
-			uint16_t	pc	=cpu->mRegs.PC;
-			uint16_t	ofs	=cpu->mMem[i].mAddrOfs;
-
-			if(cpu->mRegs.PC >= ofs
-				&& cpu->mRegs.PC < (ofs + cpu->mMem[i].mSize))
-			{
-				pChunk		=&cpu->mMem[i].mpChunk[pc - ofs];
-				modIndex	=i;
-				bFound		=true;
-				break;
-			}
-		}
-	}
-
-	if(!bFound)
-	{
-		printf("No memory at address %d\n", cpu->mRegs.PC);
-		return	false;
-	}
+	uint8_t	curModule	=GetActiveModule(cpu->mpMC);
 
 	//fetch instruction
-	uint8_t	instruction	=*pChunk;
+	uint8_t	instruction	=MCFetchValue(cpu->mpMC, cpu->mRegs.PC);
 
 	//advance program counter
 	cpu->mRegs.PC++;
-	pChunk++;
-
+	
 	//see how many arguments are needed
 	uint8_t	argBytes	=OPCArgSizeTable[instruction];
 
@@ -99,31 +43,27 @@ bool	CPUTick(CPU *cpu)
 
 	if(argBytes == 1)
 	{
-		byteArg	=*pChunk;
+		byteArg	=MCFetchValue(cpu->mpMC, cpu->mRegs.PC);
 
 		//stuff in word for jump table
 		wordArg	=byteArg;
 
 		//advance program counter
 		cpu->mRegs.PC++;
-		pChunk++;
 	}
 	else if(argBytes == 2)
 	{
-		wordArg	=*((uint16_t *)pChunk);
+		wordArg	=MCFetchValue16(cpu->mpMC, cpu->mRegs.PC);
 
 		//advance program counter
 		cpu->mRegs.PC++;
-		pChunk++;
 	}
 	else
 	{
 		assert(false);
 	}
 
-	//hard coding to RAM here but eventually need to figure out
-	//all the gobliny details of bank switching and such
-	OPCJumpTable[instruction](&cpu->mRegs, &cpu->mMem[0], wordArg);
+	OPCJumpTable[instruction](&cpu->mRegs, cpu->mpMC, wordArg);
 }
 
 
@@ -135,24 +75,22 @@ int	CPUThreadProc(void *context)
 	bool	*bActive	=(bool *)context;
 
 	//set up memory
-	//hard code for now
+	CreateMemController(&cpu.mpMC);
 
-	//standard c64 ram
-	//contains zero page, stack, screen, etc
-	cpu.mMem[0].mbWritable	=true;
-	cpu.mMem[0].mAddrOfs	=0x0000;
-	cpu.mMem[0].mpChunk		=calloc(65536, 1);	//64k of ram
+	//Main sytem mem
+	InitModule(cpu.mpMC, 0, MM_SYSTEM | MM_WRITABLE, 0, 0xFFFF);
 
-	//ROM stuff
-	cpu.mMem[1].mbWritable	=false;		//rom
-	cpu.mMem[1].mAddrOfs	=0xF000;	//top 4k
-	cpu.mMem[1].mpChunk		=calloc(4096, 1);
+	//Stack
+	InitModule(cpu.mpMC, 1, MM_STACK | MM_WRITABLE, 0, 0xFFFF);
 
-	cpu.mNumModules	=2;
+	//vid screen mem
+	InitModule(cpu.mpMC, 2, MM_DEVICEREAD | MM_WRITABLE, 0, 0xFFFF);
+
+	//need to load a program
 
 	//boot!
-	cpu.mRegs.S		=0xFF;		//top of stack, but will be offset 256 I think
-	cpu.mRegs.PC	=0xFFFC;	//C64 first instruction spot
+	cpu.mRegs.S		=0xFFFF;	//top of stack
+	cpu.mRegs.PC	=0xFFFC;	//6502 first instruction spot
 
 	//clock speed
 	int	usTicRate	=1000;	//tic per millisecond for now
@@ -171,7 +109,6 @@ int	CPUThreadProc(void *context)
 	{
 		clock_gettime(CLOCK_REALTIME, &start);
 
-//		thrd_yield();
 		thrd_sleep(&tiny, NULL);
 
 		clock_gettime(CLOCK_REALTIME, &end);
@@ -208,6 +145,8 @@ int	CPUThreadProc(void *context)
 	double	ratio	=(double)ticTotal / (double)ticUps;
 
 	printf("Exiting thread with ratio: %f\n", ratio);
+
+	MCFreeAll(&cpu.mpMC);
 
 	return	thrd_success;
 }

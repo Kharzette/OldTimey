@@ -1,7 +1,7 @@
 #include	<stdint.h>
 #include	<stdbool.h>
 #include	"../Registers.h"
-#include	"../Memory.h"
+#include	"../MemController.h"
 #include	"../AddressModes.h"
 
 
@@ -44,7 +44,7 @@ void	ADC(Registers *pRegs, uint8_t arg0, uint8_t arg1, uint8_t *res)
 //doing these in the order they appear in the OpCode Matrix
 
 //(zp,x)
-void	ADC_ZPIndX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
+void	ADC_ZPIndX(Registers *pRegs, MemController *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPIndirectX8(pRegs, pMem, argAddr);
 
@@ -52,7 +52,7 @@ void	ADC_ZPIndX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //zp
-void	ADC_ZP(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
+void	ADC_ZP(Registers *pRegs, MemController *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZP(pMem, argAddr);
 
@@ -60,13 +60,13 @@ void	ADC_ZP(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //#
-void	ADC_Immediate(Registers *pRegs, MemModule *pUnUsed, uint16_t arg)
+void	ADC_Immediate(Registers *pRegs, MemController *pUnUsed, uint16_t arg)
 {
 	ADC(pRegs, pRegs->A, arg, &pRegs->A);
 }
 
 //a
-void	ADC_Absolute(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
+void	ADC_Absolute(Registers *pRegs, MemController *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=Absolute8(pMem, argAddr);
 
@@ -74,7 +74,7 @@ void	ADC_Absolute(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //(zp),y
-void	ADC_ZPIndY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
+void	ADC_ZPIndY(Registers *pRegs, MemController *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPIndirectY8(pRegs, pMem, argAddr);
 
@@ -82,7 +82,7 @@ void	ADC_ZPIndY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //(zp)
-void	ADC_ZPIndirect(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
+void	ADC_ZPIndirect(Registers *pRegs, MemController *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPIndirect8(pMem, argAddr);
 
@@ -90,7 +90,7 @@ void	ADC_ZPIndirect(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //zp,x
-void	ADC_ZPX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
+void	ADC_ZPX(Registers *pRegs, MemController *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=ZPX(pRegs, pMem, argAddr);
 
@@ -98,7 +98,7 @@ void	ADC_ZPX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //a,y
-void	ADC_AbsoluteY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
+void	ADC_AbsoluteY(Registers *pRegs, MemController *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=AbsoluteY8(pRegs, pMem, argAddr);
 	
@@ -106,7 +106,7 @@ void	ADC_AbsoluteY(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
 }
 
 //a,x
-void	ADC_AbsoluteX(Registers *pRegs, MemModule *pMem, uint16_t argAddr)
+void	ADC_AbsoluteX(Registers *pRegs, MemController *pMem, uint16_t argAddr)
 {
 	uint8_t	arg	=AbsoluteX8(pRegs, pMem, argAddr);
 	
