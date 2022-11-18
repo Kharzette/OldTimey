@@ -147,6 +147,8 @@ int	CPUThreadProc(void *context)
 	printf("Exiting thread with ratio: %f\n", ratio);
 
 	MCFreeAll(&cpu.mpMC);
+	
+	//by Crom, I need to test a push
 
 	return	thrd_success;
 }
